@@ -1,3 +1,4 @@
+// Mock data for services
 export const services = [
   {
     id: 1,
@@ -31,7 +32,7 @@ export const services = [
   }
 ];
 
-// Data for appointments
+// Mock data for appointments
 export const initialAppointments = [
   {
     id: 1,
@@ -63,11 +64,4 @@ export const initialAppointments = [
     notes: '',
     status: 'Completed'
   }
-];
-
-export const statusOptions = [
-  'Pending',
-  'Confirmed',
-  'Completed',
-  'Cancelled'
 ];

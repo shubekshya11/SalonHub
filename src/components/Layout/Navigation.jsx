@@ -2,38 +2,28 @@ import React from 'react';
 
 const Navigation = ({ activeTab, onTabChange }) => {
   const tabs = [
+    { id: 'dashboard', label: 'Dashboard' },
     { id: 'services', label: 'Services' },
-    { id: 'book', label: 'Book Appointment' },
-    { id: 'appointments', label: 'Appointments' }
+    { id: 'book', label: 'New Appointment' }
   ];
 
   return (
-    <nav style={{ background: 'white', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+    <nav style={{ background: 'white', borderBottom: '1px solid #ddd' }}>
       <div className="container" style={{ padding: '0 1rem' }}>
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
+              className={`filter-tab ${activeTab === tab.id ? 'active' : ''}`}
               style={{
                 padding: '0.75rem 1rem',
-                fontWeight: 500,
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                borderBottom: activeTab === tab.id ? '2px solid #2563eb' : '2px solid transparent',
-                color: activeTab === tab.id ? '#2563eb' : '#4b5563',
-                transition: 'color 0.2s'
-              }}
-              onMouseEnter={(e) => {
-                if (activeTab !== tab.id) {
-                  e.target.style.color = '#2563eb';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeTab !== tab.id) {
-                  e.target.style.color = '#4b5563';
-                }
+                borderBottom: activeTab === tab.id ? '2px solid #000080' : '2px solid transparent',
+                color: activeTab === tab.id ? '#000080' : '#333',
+                fontWeight: activeTab === tab.id ? 600 : 400
               }}
             >
               {tab.label}

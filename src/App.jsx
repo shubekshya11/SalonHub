@@ -1,38 +1,39 @@
 import { useState } from 'react';
 import Header from './components/Layout/Header';
 import Navigation from './components/Layout/Navigation';
-import ServicesList from './components/Services/ServicesList';
-import AppointmentForm from './components/Appointments/AppointmentForm';
-import AppointmentsList from './components/Appointments/AppointmentsList';
-import { AppointmentProvider } from './context/AppointmentContext';
+import DashboardPage from './pages/DashboardPage';
+import ServicesPage from './pages/ServicesPage';
+import BookAppointmentPage from './pages/BookAppointmentPage';
 import './index.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('services');
+  const [activeTab, setActiveTab] = useState('dashboard');
+
+  const handleAddAppointment = () => {
+    setActiveTab('book');
+  };
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'dashboard':
+        return <DashboardPage onAddAppointment={handleAddAppointment} />;
       case 'services':
-        return <ServicesList />;
+        return <ServicesPage />;
       case 'book':
-        return <AppointmentForm />;
-      case 'appointments':
-        return <AppointmentsList />;
+        return <BookAppointmentPage onComplete={() => setActiveTab('dashboard')} />;
       default:
-        return <ServicesList />;
+        return <DashboardPage onAddAppointment={handleAddAppointment} />;
     }
   };
 
   return (
-    <AppointmentProvider>
-      <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
-        <Header />
-        <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
-        <main className="container" style={{ padding: '2rem 1rem' }}>
-          {renderContent()}
-        </main>
-      </div>
-    </AppointmentProvider>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
+      <Header onAddAppointment={activeTab === 'dashboard' ? handleAddAppointment : null} />
+      <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+      <main>
+        {renderContent()}
+      </main>
+    </div>
   );
 }
 

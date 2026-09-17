@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({ children, onClick, type = 'button', variant = 'primary', disabled = false, className = '' }) => {
+const Button = ({ children, onClick, type = 'button', variant = 'primary', disabled = false, style = {}, className = '' }) => {
   const baseStyles = 'btn';
   
   const variants = {
@@ -16,6 +16,7 @@ const Button = ({ children, onClick, type = 'button', variant = 'primary', disab
       onClick={onClick}
       disabled={disabled}
       className={`${baseStyles} ${variants[variant]} ${className}`}
+      style={style}
     >
       {children}
     </button>
