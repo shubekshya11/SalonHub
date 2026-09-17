@@ -4,16 +4,6 @@ import Input from '../UI/Input';
 import Button from '../UI/Button';
 import ErrorMessage from '../UI/ErrorMessage';
 
-/**
- * ServiceForm Component
- * Form for adding and editing services
- * 
- * Why this component exists:
- * - Reusable form for both add and edit operations
- * - Centralizes service form logic and validation
- * - Makes the code DRY and maintainable
- */
-
 const ServiceForm = ({ serviceToEdit, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
     name: '',

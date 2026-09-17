@@ -1,8 +1,3 @@
-/**
- * API Client Utility
- * Handles HTTP requests with proper error handling, loading states, and status codes
- */
-
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
 /**
@@ -19,7 +14,7 @@ class ApiError extends Error {
 
 /**
  * Generic request handler with error handling
- * @param {string} endpoint - API endpoint
+ * @param {string} endpoint 
  * @param {Object} options - Fetch options
  * @returns {Promise<Object>} Response data
  */
