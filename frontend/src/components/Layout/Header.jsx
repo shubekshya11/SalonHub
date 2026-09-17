@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Header = ({ onAddAppointment }) => {
+const Header = () => {
   return (
     <header style={{
       background: '#000080',
@@ -14,15 +14,6 @@ const Header = ({ onAddAppointment }) => {
         padding: '0 1rem'
       }}>
         <h1 style={{ fontSize: '1.5rem', fontWeight: 600, margin: 0 }}>Salon Booking</h1>
-        {onAddAppointment && (
-          <button 
-            onClick={onAddAppointment}
-            className="btn btn-primary"
-            style={{ backgroundColor: 'white', color: '#000080', borderColor: 'white' }}
-          >
-            Add Appointment
-          </button>
-        )}
       </div>
     </header>
   );

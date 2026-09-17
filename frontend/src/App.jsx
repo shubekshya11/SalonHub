@@ -9,26 +9,22 @@ import './index.css';
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  const handleAddAppointment = () => {
-    setActiveTab('book');
-  };
-
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <DashboardPage onAddAppointment={handleAddAppointment} />;
+        return <DashboardPage />;
       case 'services':
         return <ServicesPage />;
       case 'book':
         return <BookAppointmentPage onComplete={() => setActiveTab('dashboard')} />;
       default:
-        return <DashboardPage onAddAppointment={handleAddAppointment} />;
+        return <DashboardPage />;
     }
   };
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
-      <Header onAddAppointment={activeTab === 'dashboard' ? handleAddAppointment : null} />
+      <Header />
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
       <main>
         {renderContent()}

@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import Card from '../components/UI/Card';
 import Button from '../components/UI/Button';
+import Input from '../components/UI/Input';
 import StatusBadge from '../components/UI/StatusBadge';
 import Loading from '../components/UI/Loading';
 import ErrorMessage from '../components/UI/ErrorMessage';
 import { appointmentService } from '../services/appointmentService';
 import { APPOINTMENT_STATUS } from '../types';
 
-const DashboardPage = ({ onAddAppointment }) => {
+const DashboardPage = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filterStatus, setFilterStatus] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [statusUpdates, setStatusUpdates] = useState({});
 
   useEffect(() => {
     loadAppointments();
-    
-    // Subscribe to appointment changes
+
     const unsubscribe = appointmentService.subscribe((updatedAppointments) => {
       setAppointments(updatedAppointments);
     });
@@ -38,9 +39,23 @@ const DashboardPage = ({ onAddAppointment }) => {
     }
   };
 
-  const filteredAppointments = filterStatus
-    ? appointments.filter(apt => apt.status === filterStatus)
-    : appointments;
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+
+  const filteredAppointments = appointments.filter((apt) => {
+    if (filterStatus && apt.status !== filterStatus) {
+      return false;
+    }
+
+    if (!normalizedQuery) {
+      return true;
+    }
+
+    const name = (apt.customerName || '').toLowerCase();
+    const phone = (apt.customerPhone || '').replace(/\s/g, '');
+    const queryPhone = normalizedQuery.replace(/\s/g, '');
+
+    return name.includes(normalizedQuery) || phone.includes(queryPhone);
+  });
 
   const handleStatusChange = (appointmentId, newStatus) => {
     setStatusUpdates(prev => ({
@@ -75,6 +90,19 @@ const DashboardPage = ({ onAddAppointment }) => {
     }
   };
 
+  const emptyMessage = () => {
+    if (normalizedQuery && filterStatus) {
+      return `No ${filterStatus} appointments match "${searchQuery.trim()}"`;
+    }
+    if (normalizedQuery) {
+      return `No appointments found for "${searchQuery.trim()}"`;
+    }
+    if (filterStatus) {
+      return `No ${filterStatus} appointments found`;
+    }
+    return 'No appointments yet';
+  };
+
   if (loading) {
     return (
       <div className="container" style={{ padding: '2rem 1rem' }}>
@@ -92,10 +120,15 @@ const DashboardPage = ({ onAddAppointment }) => {
       <Card>
         <div className="section-header">
           <h2>Appointments</h2>
-          <Button onClick={onAddAppointment} className="btn-primary">
-            Add Appointment
-          </Button>
         </div>
+
+        <Input
+          label="Search"
+          name="search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by customer name or phone"
+        />
 
         <div className="filter-tabs">
           <button
@@ -132,7 +165,7 @@ const DashboardPage = ({ onAddAppointment }) => {
 
         {filteredAppointments.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
-            {filterStatus ? `No ${filterStatus.toLowerCase()} appointments found` : 'No appointments yet'}
+            {emptyMessage()}
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
