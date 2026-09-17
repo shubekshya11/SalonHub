@@ -109,7 +109,7 @@ const AppointmentForm = () => {
   return (
     <Card title="Book Appointment">
       {submitSuccess && (
-        <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+        <div className="success-message">
           Appointment booked successfully!
         </div>
       )}
@@ -167,8 +167,8 @@ const AppointmentForm = () => {
           error={errors.time}
         />
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div style={{ marginBottom: '1rem' }}>
+          <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.25rem' }}>
             Notes
           </label>
           <textarea
@@ -177,7 +177,8 @@ const AppointmentForm = () => {
             onChange={handleChange}
             placeholder="Any additional notes (optional)"
             rows="3"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="input"
+            style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '0.25rem', fontSize: '0.875rem', fontFamily: 'inherit' }}
           />
         </div>
 
@@ -185,7 +186,7 @@ const AppointmentForm = () => {
           type="submit"
           variant="primary"
           disabled={isSubmitting}
-          className="w-full"
+          style={{ width: '100%' }}
         >
           {isSubmitting ? 'Booking...' : 'Book Appointment'}
         </Button>

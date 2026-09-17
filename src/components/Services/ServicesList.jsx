@@ -5,39 +5,23 @@ import { services } from '../../data/mockData';
 const ServicesList = () => {
   return (
     <Card title="Services Management">
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
+      <div style={{ overflowX: 'auto' }}>
+        <table className="table">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                ID
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Service Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Price (NPR)
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Duration (minutes)
-              </th>
+            <tr>
+              <th>ID</th>
+              <th>Service Name</th>
+              <th>Price (NPR)</th>
+              <th>Duration (minutes)</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody>
             {services.map((service) => (
-              <tr key={service.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {service.id}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {service.name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  NPR {service.price}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {service.duration} minutes
-                </td>
+              <tr key={service.id}>
+                <td>{service.id}</td>
+                <td style={{ fontWeight: 500 }}>{service.name}</td>
+                <td>NPR {service.price}</td>
+                <td>{service.duration} minutes</td>
               </tr>
             ))}
           </tbody>

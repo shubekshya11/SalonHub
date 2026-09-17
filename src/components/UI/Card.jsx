@@ -2,8 +2,8 @@ import React from 'react';
 
 const Card = ({ children, className = '', title }) => {
   return (
-    <div className={`bg-white rounded-lg shadow-md p-6 ${className}`}>
-      {title && <h2 className="text-xl font-semibold mb-4">{title}</h2>}
+    <div className={`card ${className}`}>
+      {title && <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1rem' }}>{title}</h2>}
       {children}
     </div>
   );

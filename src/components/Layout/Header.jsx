@@ -2,10 +2,14 @@ import React from 'react';
 
 const Header = () => {
   return (
-    <header className="bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg">
-      <div className="container mx-auto px-4 py-6">
-        <h1 className="text-3xl font-bold">Salon Appointment System</h1>
-        <p className="text-purple-100 mt-1">Manage your salon bookings efficiently</p>
+    <header style={{
+      background: '#000080',
+      color: 'white',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+    }}>
+      <div className="container" style={{ padding: '1.5rem 1rem' }}>
+        <h1 style={{ fontSize: '1.875rem', fontWeight: 700, margin: 0 }}>Salon Appointment System</h1>
+        <p style={{ color: '#e0e7ff', marginTop: '0.25rem', margin: '0.25rem 0 0 0' }}>Manage your salon bookings efficiently</p>
       </div>
     </header>
   );

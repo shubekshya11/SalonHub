@@ -25,10 +25,10 @@ function App() {
 
   return (
     <AppointmentProvider>
-      <div className="min-h-screen bg-gray-50">
+      <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
         <Header />
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
-        <main className="container mx-auto px-4 py-8">
+        <main className="container" style={{ padding: '2rem 1rem' }}>
           {renderContent()}
         </main>
       </div>

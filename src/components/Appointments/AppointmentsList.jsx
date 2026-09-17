@@ -47,27 +47,27 @@ const AppointmentsList = () => {
     }
   };
 
-  const getStatusColor = (status) => {
+  const getStatusBadgeClass = (status) => {
     switch (status) {
       case 'Pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'badge-pending';
       case 'Confirmed':
-        return 'bg-blue-100 text-blue-800';
+        return 'badge-confirmed';
       case 'Completed':
-        return 'bg-green-100 text-green-800';
+        return 'badge-completed';
       case 'Cancelled':
-        return 'bg-red-100 text-red-800';
+        return 'badge-cancelled';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return '';
     }
   };
 
   if (loading) {
     return (
       <Card title="Appointments Management">
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span className="ml-3 text-gray-600">Loading appointments...</span>
+        <div className="loading">
+          <div className="spinner"></div>
+          <span style={{ marginLeft: '0.75rem', color: '#6b7280' }}>Loading appointments...</span>
         </div>
       </Card>
     );
@@ -76,7 +76,7 @@ const AppointmentsList = () => {
   if (error) {
     return (
       <Card title="Appointments Management">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <div className="error-message">
           {error}
         </div>
       </Card>
@@ -85,7 +85,7 @@ const AppointmentsList = () => {
 
   return (
     <Card title="Appointments Management">
-      <div className="mb-6">
+      <div style={{ marginBottom: '1.5rem' }}>
         <Select
           label="Filter by Status"
           value={filterStatus}
@@ -98,67 +98,49 @@ const AppointmentsList = () => {
       </div>
 
       {filteredAppointments.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
           {filterStatus ? `No ${filterStatus.toLowerCase()} appointments found` : 'No appointments yet'}
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white">
+        <div style={{ overflowX: 'auto' }}>
+          <table className="table">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Customer
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Phone
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Service
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Time
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+              <tr>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Service</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody>
               {filteredAppointments.map((appointment) => (
-                <tr key={appointment.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {appointment.customerName}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {appointment.customerPhone}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {getServiceName(appointment.serviceId)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {appointment.date}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {appointment.time}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(appointment.status)}`}>
+                <tr key={appointment.id}>
+                  <td style={{ fontWeight: 500 }}>{appointment.customerName}</td>
+                  <td>{appointment.customerPhone}</td>
+                  <td>{getServiceName(appointment.serviceId)}</td>
+                  <td>{appointment.date}</td>
+                  <td>{appointment.time}</td>
+                  <td>
+                    <span className={`badge ${getStatusBadgeClass(appointment.status)}`}>
                       {appointment.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <div className="flex space-x-2">
-                      <div className="flex items-center space-x-1">
+                  <td>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
                         <select
                           value={statusUpdates[appointment.id] || ''}
                           onChange={(e) => handleStatusChange(appointment.id, e.target.value)}
-                          className="text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          style={{
+                            fontSize: '0.75rem',
+                            border: '1px solid #d1d5db',
+                            borderRadius: '0.25rem',
+                            padding: '0.25rem 0.5rem',
+                            background: 'white'
+                          }}
                         >
                           <option value="">Update Status</option>
                           {statusOptions.map(status => (
@@ -169,7 +151,7 @@ const AppointmentsList = () => {
                           <Button
                             variant="success"
                             onClick={() => handleUpdateStatus(appointment.id)}
-                            className="px-2 py-1 text-xs"
+                            style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
                           >
                             Save
                           </Button>
@@ -178,7 +160,7 @@ const AppointmentsList = () => {
                       <Button
                         variant="danger"
                         onClick={() => handleDelete(appointment.id)}
-                        className="px-2 py-1 text-xs"
+                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
                       >
                         Delete
                       </Button>

@@ -8,18 +8,33 @@ const Navigation = ({ activeTab, onTabChange }) => {
   ];
 
   return (
-    <nav className="bg-white shadow-md">
-      <div className="container mx-auto px-4">
-        <div className="flex space-x-4">
+    <nav style={{ background: 'white', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+      <div className="container" style={{ padding: '0 1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem' }}>
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`px-4 py-3 font-medium transition-colors ${
-                activeTab === tab.id
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-600 hover:text-blue-600'
-              }`}
+              style={{
+                padding: '0.75rem 1rem',
+                fontWeight: 500,
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                borderBottom: activeTab === tab.id ? '2px solid #2563eb' : '2px solid transparent',
+                color: activeTab === tab.id ? '#2563eb' : '#4b5563',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                if (activeTab !== tab.id) {
+                  e.target.style.color = '#2563eb';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeTab !== tab.id) {
+                  e.target.style.color = '#4b5563';
+                }
+              }}
             >
               {tab.label}
             </button>
