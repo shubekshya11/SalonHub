@@ -41,19 +41,20 @@ const BookAppointmentPage = ({ onComplete }) => {
       ...prev,
       [name]: value
     }));
-    // Clear error for this field when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
         [name]: ''
       }));
     }
+    if (submitError && ['serviceId', 'date', 'time'].includes(name)) {
+      setSubmitError(null);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validate form
+
     const validationErrors = appointmentService.validateAppointmentForm(formData);
     setErrors(validationErrors);
 
@@ -66,10 +67,19 @@ const BookAppointmentPage = ({ onComplete }) => {
     setSubmitError(null);
 
     try {
+      const conflictError = await appointmentService.checkAppointmentConflict(formData);
+      if (conflictError) {
+        setSubmitError(conflictError);
+        setErrors(prev => ({
+          ...prev,
+          time: 'This time slot is already booked for the selected service'
+        }));
+        return;
+      }
+
       await appointmentService.createAppointment(formData);
       setSubmitSuccess(true);
-      
-      // Reset form after successful submission
+
       setTimeout(() => {
         setFormData({
           customerName: '',
@@ -83,7 +93,15 @@ const BookAppointmentPage = ({ onComplete }) => {
         if (onComplete) onComplete();
       }, 1500);
     } catch (err) {
-      setSubmitError('Failed to book appointment. Please try again.');
+      if (err?.code === 'APPOINTMENT_CONFLICT') {
+        setSubmitError(err.message);
+        setErrors(prev => ({
+          ...prev,
+          time: 'This time slot is already booked for the selected service'
+        }));
+      } else {
+        setSubmitError('Failed to book appointment. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }

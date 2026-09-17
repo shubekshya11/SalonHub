@@ -22,9 +22,6 @@ class AppointmentService {
     };
   }
 
-  /**
-   * Notify all listeners of changes
-   */
   notifyListeners() {
     if (this.cachedAppointments) {
       this.listeners.forEach(callback => callback(this.cachedAppointments));
@@ -58,6 +55,13 @@ class AppointmentService {
    * @returns {Promise<Object>} 
    */
   async createAppointment(appointmentData) {
+    const conflictError = await this.checkAppointmentConflict(appointmentData);
+    if (conflictError) {
+      const error = new Error(conflictError);
+      error.code = 'APPOINTMENT_CONFLICT';
+      throw error;
+    }
+
     const newAppointment = await appointmentsApi.createAppointment(appointmentData);
     await this.getAppointments();
     this.notifyListeners();
@@ -113,6 +117,62 @@ class AppointmentService {
     } catch (error) {
       return 'Unknown Service';
     }
+  }
+
+  /**
+   * Normalize time strings so "10:00" and "10:00:00" compare equal.
+   * @param {string} time
+   * @returns {string} HH:MM
+   */
+  normalizeTime(time) {
+    if (!time) return '';
+    const parts = String(time).split(':');
+    const hours = (parts[0] || '0').padStart(2, '0');
+    const minutes = (parts[1] || '0').padStart(2, '0');
+    return `${hours}:${minutes}`;
+  }
+
+  /**
+   * @param {Object} formData
+   * @param {number} [excludeId]
+   * @returns {Promise<string|null>} 
+   */
+  async checkAppointmentConflict(formData, excludeId = null) {
+    if (!formData.serviceId || !formData.date || !formData.time) {
+      return null;
+    }
+
+    const appointments = await this.getAppointments();
+    const requestedServiceId = Number(formData.serviceId);
+    const requestedDate = formData.date;
+    const requestedTime = this.normalizeTime(formData.time);
+
+    const conflict = appointments.find((apt) => {
+      if (excludeId != null && apt.id === excludeId) return false;
+      if (apt.status === 'cancelled') return false;
+
+      const aptServiceId = Number(apt.serviceId ?? apt.service);
+      const aptDate = apt.date ?? apt.appointment_date;
+      const aptTime = this.normalizeTime(apt.time ?? apt.appointment_time);
+
+      return (
+        aptServiceId === requestedServiceId &&
+        aptDate === requestedDate &&
+        aptTime === requestedTime
+      );
+    });
+
+    if (conflict) {
+      const serviceName =
+        conflict.serviceName ||
+        conflict.service_name ||
+        (await this.getServiceName(requestedServiceId));
+      const displayTime = this.normalizeTime(formData.time);
+
+      return `${serviceName} is already booked on ${formData.date} at ${displayTime}. Please choose a different time or service.`;
+    }
+
+    return null;
   }
 
   /**
